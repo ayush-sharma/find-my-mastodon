@@ -1,0 +1,35 @@
+[Settings]
+ID = "Your_Site_ID"
+
+# Settings in the [build] context are global and are applied to all contexts unless otherwise overridden by more specific contexts.  
+
+[[redirects]]
+  from = "http://cocky-panini-77782d.netlify.com/*"
+  to = "http://findmymastodon.com/:splat 301!"
+  status = 301
+  force = true
+  [redirects.headers]
+    X-From = "Netlify"
+
+[[redirects]]
+  from = "http://findmymastodon.com/"
+  to = "https://notes.ayushsharma.in/:splat"
+  status = 301
+  force = true
+  [redirects.headers]
+    X-From = "Netlify"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'none'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://ajax.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self'; child-src 'self'; font-src https://fonts.googleapis.com https://fonts.gstatic.com https://findmymastodon.com;"
+    X-XSS-Protection = "1; mode=block"
+    Strict-Transport-Security = "max-age=604800; includeSubdomains; "
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin"
+    
+[[headers]]
+  for = "/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=7776000, must-revalidate"
