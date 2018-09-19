@@ -12,7 +12,7 @@ ID = "Your_Site_ID"
     X-From = "Netlify"
 
 [[redirects]]
-  from = "http://findmymastodon.com/"
+  from = "http://findmymastodon.com/*"
   to = "https://notes.ayushsharma.in/:splat"
   status = 301
   force = true
