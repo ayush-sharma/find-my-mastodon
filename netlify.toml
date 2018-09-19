@@ -5,7 +5,7 @@ ID = "Your_Site_ID"
 
 [[redirects]]
   from = "http://cocky-panini-77782d.netlify.com/*"
-  to = "http://findmymastodon.com/:splat 301!"
+  to = "https://notes.ayushsharma.in/:splat"
   status = 301
   force = true
   [redirects.headers]
