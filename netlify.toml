@@ -1,19 +1,11 @@
 [Settings]
-ID = "Your_Site_ID"
+ID = "findmymastodon.com"
 
 # Settings in the [build] context are global and are applied to all contexts unless otherwise overridden by more specific contexts.  
 
 [[redirects]]
   from = "http://cocky-panini-77782d.netlify.com/*"
-  to = "https://notes.ayushsharma.in/:splat"
-  status = 301
-  force = true
-  [redirects.headers]
-    X-From = "Netlify"
-
-[[redirects]]
-  from = "http://findmymastodon.com/*"
-  to = "https://notes.ayushsharma.in/:splat"
+  to = "https://findmymastodon.com/:splat"
   status = 301
   force = true
   [redirects.headers]
