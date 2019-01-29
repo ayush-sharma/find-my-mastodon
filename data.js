@@ -37,7 +37,8 @@
  	var url = 'https://instances.social/api/1.0/instances/list';
  	var token = 'D8w36TkQckJ0k6Ts8NXazrlzYnhxCwbN3nLbV50f5WDLAEKiGZSSnLGzS7MxjvEOzLXC3QS1rxVtooSFlNhiTHoj18pPvltxcbrkr36eWAJY5Su8sCdgePcRTbY3iOZA';	
 
- 	var params = 'min_users=' + min_users
+ 	var params = 'count=100'
+ 				 + '&min_users=' + min_users
  				 + '&max_users=' + max_users
  				 + '&min_active_users=' + min_active_users
  				 + '&include_dead=' + include_dead
