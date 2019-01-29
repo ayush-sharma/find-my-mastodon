@@ -5,14 +5,9 @@
  */
  function processResponse(responseData)
  {
- 	if(responseData === null) {
+ 	if(responseData === null || responseData.instances.length == 0) {
 
  		return false;
- 	}
-
- 	if(responseData.instances.length == 0) {
-
- 		return null;
  	}
 
  	var data_table = $('#data_table').DataTable();
@@ -21,6 +16,8 @@
 
  		data_table.row.add(renderRow(element)).draw(false);
  	});
+
+ 	return true;
  }
 
 /**
@@ -68,7 +65,7 @@
 
  			response = processResponse(responseData);
 
- 			if (response != null) {
+ 			if (response) {
 
  				next_page_id = responseData.pagination != undefined && responseData.pagination.next_id != undefined && responseData.pagination.next_id.length > 0 ? responseData.pagination.next_id : null;
 
@@ -162,10 +159,5 @@
  	});
 
  	fetchData(languages, allow_adult_content, min_users, max_users, min_active_users, include_dead, include_down, include_closed, '');
- 	
- 	// min_users 0-
- 	// max_users 0-
- 	// min_active_users 0-
-
  });
 
