@@ -131,13 +131,15 @@
  */
  $(document).ready(function () {
 
- 	var languages = $.urlParam('languages%5B%5D')
-
  	params = {
  		'min_users': $.urlParam('min_users') !== null ? $.urlParam('min_users') : '0',
  		'max_users': $.urlParam('max_users') !== null ? $.urlParam('max_users') : '10000000',
  		'min_active_users': $.urlParam('min_active_users') !== null ? $.urlParam('min_active_users') : '0',
  		'prohibited_content': ['nudity_nocw', 'nudity_all', 'pornography_nocw', 'pornography_all', 'illegalContentLinks', 'spam', 'advertising', 'spoilers_nocw'],
+ 		'filterSelect': function(keyName) {
+
+ 			$('#' + keyName + ' option[value="' + this[keyName] + '"]').attr('selected', 'selected');
+ 		},
  		'filterProps': function(keyName) {
 
  			found = [];
@@ -162,6 +164,9 @@
  	};
 
  	// Validate switches
+ 	params.filterSelect('min_users');
+ 	params.filterSelect('max_users');
+ 	params.filterSelect('min_active_users');
     params.filterProps('prohibited_content');
     params.activateSwitches('prohibited_content');
 
