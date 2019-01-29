@@ -1,43 +1,4 @@
 /**
- * Get user selected input and call fetchData().
- * 
- * @return void
- */
- function updateData(languages, allow_adult_content, size, weekly_active_users) {
-
- 	var request = new XMLHttpRequest();
-
- 	var url = 'https://instances.social/api/1.0/instances/list';
- 	var params = 'min_active_users=' + weekly_active_users + '&sort_by=users&sort_order=desc';
- 	var token = 'D8w36TkQckJ0k6Ts8NXazrlzYnhxCwbN3nLbV50f5WDLAEKiGZSSnLGzS7MxjvEOzLXC3QS1rxVtooSFlNhiTHoj18pPvltxcbrkr36eWAJY5Su8sCdgePcRTbY3iOZA';
-
- 	request.open('GET', url + '?' + params, true);
- 	request.setRequestHeader('Authorization', 'Bearer ' + token);
- 	request.send();
- 	request.onreadystatechange= function () {
- 		
- 		if (request.readyState == 4) {
-
- 			if(request.status != 200) {
-
- 				return null;
- 			}
-
- 			responseData = request.responseText;
- 			responseData = JSON.parse(responseData);
-
- 			console.log(responseData);
-
- 			processResponse(responseData);
-
- 			var next_page_id = responseData.pagination != undefined && responseData.pagination.next_id != undefined && responseData.pagination.next_id.length > 0 ? responseData.pagination.next_id : null;
-
- 			updateNextPageData(languages, allow_adult_content, size, weekly_active_users, next_page_id);
- 		}
- 	}
- }
-
-/**
  * Process response data and genereate HTML for DataTable row.
  * @param  {[type]} responseData [description]
  * @return {[type]}              [description]
@@ -53,7 +14,7 @@
 
  		console.log('- No results.');
 
- 		$('#data_table').DataTable().clear();
+ 		//$('#data_table').DataTable().clear();
 
  		return null;
  	}
@@ -78,40 +39,47 @@
  * @param  {[type]} min_id              [description]
  * @return {[type]}                     [description]
  */
- function updateNextPageData(languages, allow_adult_content, size, weekly_active_users, next_page_id)
+ function fetchData(languages, allow_adult_content, min_users, max_users, min_active_users, include_dead, include_down, include_closed, next_page_id)
  {
- 	if(next_page_id == null) {
-
- 		return false;
- 	}
-
- 	console.log('Called for page:' + next_page_id);
-
  	var request = new XMLHttpRequest();
 
  	var url = 'https://instances.social/api/1.0/instances/list';
- 	var params = 'min_active_users=' + weekly_active_users + '&sort_by=users&sort_order=desc';
  	var token = 'D8w36TkQckJ0k6Ts8NXazrlzYnhxCwbN3nLbV50f5WDLAEKiGZSSnLGzS7MxjvEOzLXC3QS1rxVtooSFlNhiTHoj18pPvltxcbrkr36eWAJY5Su8sCdgePcRTbY3iOZA';	
 
- 	tmp_params = params + '&min_id=' + next_page_id;
+ 	var params = 'min_users=' + min_users
+ 				 + '&max_users=' + max_users
+ 				 + '&min_active_users=' + min_active_users
+ 				 + '&include_dead=' + include_dead
+ 				 + '&include_down=' + include_down
+ 				 + '&include_closed=' + include_closed
+ 				 + '&sort_by=users&sort_order=desc';
 
- 	request.open('GET', url + '?' + tmp_params, true);
+ 	if(next_page_id !== null) {
+
+ 		params += '&min_id=' + next_page_id;
+ 	}
+
+ 	request.open('GET', url + '?' + params, true);
  	request.setRequestHeader('Authorization', 'Bearer ' + token);
  	request.send();
  	request.onreadystatechange= function () {
 
  		if (request.readyState == 4 && request.status == 200) {
 
- 			responseData = request.responseText;
+ 			var responseData = request.responseText;
  			responseData = JSON.parse(responseData);
 
+ 			console.log(url);
  			console.log(responseData);
 
  			processResponse(responseData);
 
  			next_page_id = responseData.pagination != undefined && responseData.pagination.next_id != undefined && responseData.pagination.next_id.length > 0 ? responseData.pagination.next_id : null;
 
- 			updateNextPageData(languages, allow_adult_content, size, weekly_active_users, next_page_id);
+ 			if(next_page_id !== null) {
+
+ 				fetchData(languages, allow_adult_content, min_users, max_users, min_active_users, include_dead, include_down, include_closed, next_page_id);	
+ 			}
  		}
  	}
  }
@@ -160,78 +128,24 @@
  }
 
 /**
- * Fetch values from URL parameters by paramter name.
- * 
- * @param  strring name Name of paramter.
- * @return string
- */
- $.urlParam = function(name){
-
- 	var vars = [], hash;
- 	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
- 	
- 	for(var i = 0; i < hashes.length; i++)
- 	{
- 		hash = hashes[i].split('=');
- 		vars.push(hash[0]);
-
- 		if(vars[hash[0]] != undefined) {
-
- 			var tmp = vars[hash[0]];
-
- 			if(Array.isArray(vars[hash[0]])) {
-
- 				vars[hash[0]].push(hash[1]);
- 			}
- 			else {
-
- 				tmp = vars[hash[0]];
-
- 				vars[hash[0]] = [tmp, hash[1]];
- 			}
- 		}
- 		else {
-
- 			vars[hash[0]] = hash[1];	
- 		}
- 	}
-
- 	return vars[name] != undefined ? vars[name] : null;
- }
-
-/**
  * Main function.
  *
  * @return void
  */
  $(document).ready(function () {
 
- 	var user_counts = {
- 		'0': null,
- 		'1': 0,
- 		'2': 100,
- 		'3': 1000,
- 		'4': 10000,
- 		'5': 100000,
- 		'6': 500000,
- 		'7': 1000000
- 	};
-
  	var languages = $.urlParam('languages%5B%5D');
  	var allow_adult_content = $.urlParam('adult_content');
- 	var min_users = $.urlParam('size');
- 	var weekly_active_users = $.urlParam('wau');
+
+ 	min_users = $.urlParam('min_users') !== null ? $.urlParam('min_users') : '0';
+ 	max_users = $.urlParam('max_users') !== null ? $.urlParam('max_users') : '10000000';
+ 	min_active_users = $.urlParam('min_active_users') !== null ? $.urlParam('min_active_users') : '0';
+
+ 	include_dead = $.urlParam('include_dead') !== null ? $.urlParam('include_dead') : 'false';
+ 	include_down = $.urlParam('include_down') !== null ? $.urlParam('include_down') : 'false';
+ 	include_closed = $.urlParam('include_closed') !== null ? $.urlParam('include_closed') : 'false';
 
  	allow_adult_content = allow_adult_content != undefined && allow_adult_content == 1 ? true : false;
-
- 	min_users = min_users != undefined && user_counts[min_users] != undefined ? user_counts[min_users] : 0;
-
- 	weekly_active_users = weekly_active_users != undefined && user_counts[weekly_active_users] != undefined ? user_counts[weekly_active_users] : 0;
-
- 	console.log('Languages:' + languages);
- 	console.log('Adult?' + allow_adult_content);
- 	console.log('Size:' + min_users);
- 	console.log('WAU:' + weekly_active_users);
 
  	var data_table = $('#data_table').DataTable({
  		order: [[2, "desc"]],
@@ -244,7 +158,11 @@
  		]
  	});
 
- 	updateData(languages, allow_adult_content, size, weekly_active_users);
+ 	fetchData(languages, allow_adult_content, min_users, max_users, min_active_users, include_dead, include_down, include_closed, '');
+ 	
+ 	// min_users 0-
+ 	// max_users 0-
+ 	// min_active_users 0-
 
  });
 

@@ -3,6 +3,7 @@
 
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/fh-3.1.4/r-2.2.2/sc-1.5.0/datatables.min.js"></script>
 
+<script type="text/javascript" src="helpers.js"></script>
 <script type="text/javascript" src="data.js"></script>
 
 <!DOCTYPE html>
@@ -40,29 +41,68 @@
 						</div>
 					</div>
 
+
 					<div class="form-group">
-						<label for="size">Size</label>
-						<select name="size" id="size" class="custom-select">
-							<option value="1">Any</option>
-							<option value="2">> 100 users</option>
-							<option value="3">> 1K users</option>
-							<option value="4">> 10K users</option>
-							<option value="5">> 100K users</option>
-							<option value="6">> 500K users</option>
-							<option value="7">> 5M users</option>
+						<label for="include_dead">Show dead instances?</label>
+						<div>
+							<input type="radio" value="false" name="include_dead" id="include_dead" checked="checked" />No
+							<input type="radio" value="true" name="include_dead" id="include_dead" />Yes
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="include_down">Show down instances?</label>
+						<div>
+							<input type="radio" value="false" name="include_down" id="include_down" checked="checked" />No
+							<input type="radio" value="true" name="include_down" id="include_down" />Yes
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="include_closed">Show closed instances?</label>
+						<div>
+							<input type="radio" value="false" name="include_closed" id="include_closed" checked="checked" />No
+							<input type="radio" value="true" name="include_closed" id="include_closed" />Yes
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<label for="min_users">Minimum users</label>
+						<select name="min_users" id="min_users" class="custom-select">
+							<option value="0">Any</option>
+							<option value="100">> 100 users</option>
+							<option value="1000">> 1K users</option>
+							<option value="10000">> 10K users</option>
+							<option value="100000">> 100K users</option>
+							<option value="1000000">> 1M users</option>
+							<option value="10000000">> 10M users</option>
 						</select>
 					</div>
 
 					<div class="form-group">
-						<label for="wau">Weekly Active Users</label>
-						<select name="wau" id="wau" class="custom-select">
-							<option value="1">Any</option>
-							<option value="2">> 100 active users</option>
-							<option value="3">> 1K active users</option>
-							<option value="4">> 10K active users</option>
-							<option value="5">> 100K active users</option>
-							<option value="6">> 500K active users</option>
-							<option value="7">> 5M active users</option>
+						<label for="max_users">Maximum users</label>
+						<select name="max_users" id="max_users" class="custom-select">
+							<option value="0">Any</option>
+							<option value="100">> 100 users</option>
+							<option value="1000">> 1K users</option>
+							<option value="10000">> 10K users</option>
+							<option value="100000">> 100K users</option>
+							<option value="1000000">> 1M users</option>
+							<option value="10000000">> 10M users</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label for="min_active_users">Minimum active users</label>
+						<select name="min_active_users" id="min_active_users" class="custom-select">
+							<option value="0">Any</option>
+							<option value="100">> 100 users</option>
+							<option value="1000">> 1K users</option>
+							<option value="10000">> 10K users</option>
+							<option value="100000">> 100K users</option>
+							<option value="1000000">> 1M users</option>
+							<option value="10000000">> 10M users</option>
 						</select>
 					</div>
 
