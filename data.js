@@ -91,6 +91,9 @@
  	var instance_desc = element.info != undefined && element.info.short_description != undefined ? element.info.short_description : null;
  	var thumbnail = element.thumbnail != undefined && element.thumbnail.length > 0 ? element.thumbnail : null;
 
+ 	users = parseFloat(element.users).toLocaleString('en');
+ 	statuses = parseFloat(element.statuses).toLocaleString('en');
+
  	var https_score = element.https_score != undefined ? element.https_score : ( element.obs_score != undefined ? element.obs_score : 0);
  	var https_rank = element.https_rank != undefined ? element.https_rank : ( element.obs_rank != undefined ? element.obs_rank : 'F');
 
@@ -116,8 +119,8 @@
 
  	(thumbnail != null ? '<img class="float-left mr-2 rounded" src="' + thumbnail + '" width="35" height="35" alt="' + instance_name + '" /></div>' : '') + instance_url + ( instance_desc != null ? '<div class="small text-muted">' + instance_desc + '</div>' : ''),
  	status_badge,
- 	element.users,
- 	element.statuses,
+ 	users,
+ 	statuses,
  	secure_badge
 
  	];	
