@@ -30,28 +30,36 @@
  * @param  {[type]} min_id              [description]
  * @return {[type]}                     [description]
  */
- function fetchData(languages, allow_adult_content, min_users, max_users, min_active_users, include_dead, include_down, include_closed, next_page_id)
+ function fetchData(params, next_page_id)
  {
  	var request = new XMLHttpRequest();
 
  	var url = 'https://instances.social/api/1.0/instances/list';
  	var token = 'D8w36TkQckJ0k6Ts8NXazrlzYnhxCwbN3nLbV50f5WDLAEKiGZSSnLGzS7MxjvEOzLXC3QS1rxVtooSFlNhiTHoj18pPvltxcbrkr36eWAJY5Su8sCdgePcRTbY3iOZA';	
 
- 	var params = 'count=100'
- 				 + '&min_users=' + min_users
- 				 + '&max_users=' + max_users
- 				 + '&min_active_users=' + min_active_users
- 				 + '&include_dead=' + include_dead
- 				 + '&include_down=' + include_down
- 				 + '&include_closed=' + include_closed
+ 	var api_params = 'count=100'
+ 				 + '&min_users=' + params['min_users']
+ 				 + '&max_users=' + params['max_users']
+ 				 + '&min_active_users=' + params['min_active_users']
+ 				 + '&include_dead=false&include_down=false&include_closed=false'
  				 + '&sort_by=users&sort_order=desc';
+
+ 	for(var i in params['instance_status']) {
+
+ 		api_params += '&' + params['instance_status'][i] + '=true';
+ 	}
+
+ 	for(var i in params['prohibited_content']) {
+
+ 		api_params +='&prohibited_content[]=' + params['prohibited_content'][i];
+ 	}
 
  	if(next_page_id !== null) {
 
- 		params += '&min_id=' + next_page_id;
+ 		api_params += '&min_id=' + next_page_id;
  	}
 
- 	request.open('GET', url + '?' + params, true);
+ 	request.open('GET', url + '?' + api_params, true);
  	request.setRequestHeader('Authorization', 'Bearer ' + token);
  	request.send();
  	request.onreadystatechange= function () {
@@ -72,7 +80,7 @@
 
 	 			if(next_page_id !== null) {
 
-	 				fetchData(languages, allow_adult_content, min_users, max_users, min_active_users, include_dead, include_down, include_closed, next_page_id);	
+	 				fetchData(params, next_page_id);	
 	 			}
  			}
  		}
@@ -107,23 +115,10 @@
 
  	secure_badge = '<span class="badge badge-' + badge_class + '">Security: ' + https_rank + '</span>';
 
- 	if(element.up == false) {
-
- 		status_badge = '<span class="badge badge-danger">Down :(</span>';
- 	}
- 	else if(element.open_registrations == false) {
-
- 		status_badge = '<span class="badge badge-warning">Closed</span>';	
- 	}
- 	else if(element.up == true) {
-
- 		status_badge = '<span class="badge badge-success">Up :)</span>';
- 	}
-
  	return [
 
  	(thumbnail != null ? '<img class="float-left mr-2 rounded" src="' + thumbnail + '" width="35" height="35" alt="' + instance_name + '" /></div>' : '') + instance_url + ( instance_desc != null ? '<div class="small text-muted">' + instance_desc + '</div>' : ''),
- 	status_badge + '<br />' + secure_badge,
+ 	secure_badge,
  	users,
  	statuses
  	];
@@ -136,29 +131,50 @@
  */
  $(document).ready(function () {
 
- 	var languages = $.urlParam('languages%5B%5D');
- 	var allow_adult_content = $.urlParam('adult_content');
+ 	var languages = $.urlParam('languages%5B%5D')
 
- 	min_users = $.urlParam('min_users') !== null ? $.urlParam('min_users') : '0';
- 	max_users = $.urlParam('max_users') !== null ? $.urlParam('max_users') : '10000000';
- 	min_active_users = $.urlParam('min_active_users') !== null ? $.urlParam('min_active_users') : '0';
+ 	params = {
+ 		'min_users': $.urlParam('min_users') !== null ? $.urlParam('min_users') : '0',
+ 		'max_users': $.urlParam('max_users') !== null ? $.urlParam('max_users') : '10000000',
+ 		'min_active_users': $.urlParam('min_active_users') !== null ? $.urlParam('min_active_users') : '0',
+ 		'prohibited_content': ['nudity_nocw', 'nudity_all', 'pornography_nocw', 'pornography_all', 'illegalContentLinks', 'spam', 'advertising', 'spoilers_nocw'],
+ 		'filterProps': function(keyName) {
 
- 	include_dead = $.urlParam('include_dead') !== null ? $.urlParam('include_dead') : 'false';
- 	include_down = $.urlParam('include_down') !== null ? $.urlParam('include_down') : 'false';
- 	include_closed = $.urlParam('include_closed') !== null ? $.urlParam('include_closed') : 'false';
+ 			found = [];
 
- 	allow_adult_content = allow_adult_content != undefined && allow_adult_content == 1 ? true : false;
+ 			for(var i in this[keyName]) {
+
+ 				if($.urlParam(this[keyName][i]) == 'true') {
+
+ 					found.push(this[keyName][i]);
+ 				}
+ 			}
+
+ 			this[keyName] = found;
+ 		},
+ 		'activateSwitches': function(keyName) {
+
+ 			for(var i in this[keyName]) {
+
+ 				$('#' + this[keyName][i]).attr('checked', true);
+ 			}
+ 		},
+ 	};
+
+ 	// Validate switches
+    params.filterProps('prohibited_content');
+    params.activateSwitches('prohibited_content');
 
  	var data_table = $('#data_table').DataTable({
  		order: [[2, "desc"]],
  		columns: [
  		{ title: "Instance", width:"70%" },
- 		{ title: "Status", width:"10%" },
+ 		{ title: "Info", width:"10%" },
  		{ title: "Users", width:"10%" },
  		{ title: "Statuses", width:"10%" }
  		]
  	});
 
- 	fetchData(languages, allow_adult_content, min_users, max_users, min_active_users, include_dead, include_down, include_closed, '');
+ 	fetchData(params, '');
  });
 

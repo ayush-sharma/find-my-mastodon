@@ -34,30 +34,6 @@
 					</div>
 
 					<div class="form-group">
-						<label for="adult_content">Allow adult content?</label>
-						<div>
-							<input type="radio" value="0" name="adult_content" id="adult_content" checked="checked" />No
-							<input type="radio" value="1" name="adult_content" id="adult_content" />Yes
-						</div>
-					</div>
-
-					<div class="custom-control custom-switch">
-						<input type="checkbox" class="custom-control-input" id="include_closed" name="include_closed" value="true">
-						<label class="custom-control-label" for="include_closed">Show closed instances</label>
-					</div>
-
-					<div class="custom-control custom-switch">
-						<input type="checkbox" class="custom-control-input" id="include_dead" name="include_dead" value="true">
-						<label class="custom-control-label" for="include_dead">Show dead instances</label>
-					</div>
-
-					<div class="custom-control custom-switch">
-						<input type="checkbox" class="custom-control-input" id="include_down" name="include_down" value="true">
-						<label class="custom-control-label" for="include_down">Show down instances</label>
-					</div>
-
-
-					<div class="form-group">
 						<label for="min_users">Minimum users</label>
 						<select name="min_users" id="min_users" class="custom-select">
 							<option value="0">Any</option>
@@ -96,6 +72,52 @@
 						</select>
 					</div>
 
+					<div class="form-group">
+						<label>Block Content</label>
+						<div>
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="advertising" name="advertising" value="true">
+								<label class="custom-control-label" for="advertising">Advertising</label>
+							</div>
+
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="spam" name="spam" value="true">
+								<label class="custom-control-label" for="spam">SPAM</label>
+							</div>
+
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="illegalContentLinks" name="illegalContentLinks" value="true">
+								<label class="custom-control-label" for="illegalContentLinks">Illegal content</label>
+							</div>
+
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="spoilers_nocw" name="spoilers_nocw" value="true">
+								<label class="custom-control-label" for="spoilers_nocw">Spoilers without content warning</label>
+							</div>
+
+							<div class="custom-control custom-switch danger">
+								<input type="checkbox" class="custom-control-input" id="nudity_nocw" name="nudity_nocw" value="true">
+								<label class="custom-control-label" for="nudity_nocw">Nudity without content warning</label>
+							</div>
+
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="nudity_all" name="nudity_all" value="true">
+								<label class="custom-control-label" for="nudity_all">All nudity</label>
+							</div>
+
+							<div class="custom-control custom-switch">
+								<input type="checkbox" class="custom-control-input" id="pornography_nocw" name="pornography_nocw" value="true">
+								<label class="custom-control-label" for="pornography_nocw">Pornography without content warning</label>
+							</div>
+
+							<div class="custom-control custom-switch danger">
+								<input type="checkbox" class="custom-control-input" id="pornography_all" name="pornography_all" value="true">
+								<label class="custom-control-label" for="pornography_all">All pornography</label>
+							</div>
+							
+						</div>
+					</div>
+					
 					<button type="submit" id="update" class="btn btn-primary btn-block">Update</button>
 
 				</form>
