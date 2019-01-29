@@ -12,20 +12,14 @@
 
  	if(responseData.instances.length == 0) {
 
- 		console.log('- No results.');
-
- 		//$('#data_table').DataTable().clear();
-
  		return null;
  	}
-
- 	console.log('- ' + responseData.instances.length + ' instances found.');
 
  	var data_table = $('#data_table').DataTable();
 
  	responseData.instances.forEach(function(element) {
 
- 		data_table.row.add(getRowHTML(element)).draw(false);
+ 		data_table.row.add(renderRow(element)).draw(false);
  	});
  }
 
@@ -72,19 +66,22 @@
  			console.log(url);
  			console.log(responseData);
 
- 			processResponse(responseData);
+ 			response = processResponse(responseData);
 
- 			next_page_id = responseData.pagination != undefined && responseData.pagination.next_id != undefined && responseData.pagination.next_id.length > 0 ? responseData.pagination.next_id : null;
+ 			if (response != null) {
 
- 			if(next_page_id !== null) {
+ 				next_page_id = responseData.pagination != undefined && responseData.pagination.next_id != undefined && responseData.pagination.next_id.length > 0 ? responseData.pagination.next_id : null;
 
- 				fetchData(languages, allow_adult_content, min_users, max_users, min_active_users, include_dead, include_down, include_closed, next_page_id);	
+	 			if(next_page_id !== null) {
+
+	 				fetchData(languages, allow_adult_content, min_users, max_users, min_active_users, include_dead, include_down, include_closed, next_page_id);	
+	 			}
  			}
  		}
  	}
  }
 
- function getRowHTML(element)
+ function renderRow(element)
  {
  	var instance_name = element.name;
  	var instance_url = '<a href="https://' + instance_name + '" target="_blank">' + instance_name + '</a>';
@@ -94,36 +91,44 @@
  	users = parseFloat(element.users).toLocaleString('en');
  	statuses = parseFloat(element.statuses).toLocaleString('en');
 
- 	var https_score = element.https_score != undefined ? element.https_score : ( element.obs_score != undefined ? element.obs_score : 0);
- 	var https_rank = element.https_rank != undefined ? element.https_rank : ( element.obs_rank != undefined ? element.obs_rank : 'F');
+ 	var https_rank = element.https_rank != undefined ? (element.https_rank).trim() : ( element.obs_rank != undefined ? element.obs_rank : '-' );
 
- 	var secure_badge = https_score > 90 ? 1 : ( https_score > 75 ? 0 : -1);
- 	var secure_badge = secure_badge == 1 ? '<span class="badge badge-success">' + https_rank + '</span>' : ( secure_badge == 0 ? '<span class="badge badge-warning">' + https_rank + '</span>' : '<span class="badge badge-danger">' + https_rank + '</span>');
+ 	var badge_class = null;
+ 	if(['A', 'A+', 'A-'].indexOf(https_rank) >= 0) {
 
- 	var status_badge = null;
+ 		badge_class = 'success';
+ 	}
+ 	else if(['B', 'B+', 'B-'].indexOf(https_rank) >= 0) {
+
+ 		badge_class = 'warning';
+ 	}
+ 	else {
+
+ 		badge_class = 'danger';
+ 	}
+
+ 	secure_badge = '<span class="badge badge-' + badge_class + '">Security: ' + https_rank + '</span>';
 
  	if(element.up == false) {
 
- 		status_badge = '<span class="badge badge-danger">Down</span>';
+ 		status_badge = '<span class="badge badge-danger">Down :(</span>';
  	}
  	else if(element.open_registrations == false) {
 
- 		status_badge = '<span class="badge badge-warning">Registration Closed</span>';	
+ 		status_badge = '<span class="badge badge-warning">Closed</span>';	
  	}
  	else if(element.up == true) {
 
- 		status_badge = '<span class="badge badge-success">OK</span>';
+ 		status_badge = '<span class="badge badge-success">Up :)</span>';
  	}
 
  	return [
 
  	(thumbnail != null ? '<img class="float-left mr-2 rounded" src="' + thumbnail + '" width="35" height="35" alt="' + instance_name + '" /></div>' : '') + instance_url + ( instance_desc != null ? '<div class="small text-muted">' + instance_desc + '</div>' : ''),
- 	status_badge,
+ 	status_badge + '<br />' + secure_badge,
  	users,
- 	statuses,
- 	secure_badge
-
- 	];	
+ 	statuses
+ 	];
  }
 
 /**
@@ -149,11 +154,10 @@
  	var data_table = $('#data_table').DataTable({
  		order: [[2, "desc"]],
  		columns: [
- 		{ title: "Instance", width:"60%" },
+ 		{ title: "Instance", width:"70%" },
  		{ title: "Status", width:"10%" },
  		{ title: "Users", width:"10%" },
- 		{ title: "Statuses", width:"10%" },
- 		{ title: "Security", width:"10%" }
+ 		{ title: "Statuses", width:"10%" }
  		]
  	});
 
