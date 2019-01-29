@@ -87,13 +87,9 @@
  function getRowHTML(element)
  {
  	var instance_name = element.name;
+ 	var instance_url = '<a href="https://' + instance_name + '" target="_blank">' + instance_name + '</a>';
  	var instance_desc = element.info != undefined && element.info.short_description != undefined ? element.info.short_description : null;
  	var thumbnail = element.thumbnail != undefined && element.thumbnail.length > 0 ? element.thumbnail : null;
-
- 	if(instance_name == 'switter.at') {
-
- 		console.log('Found switter');
- 	}
 
  	var https_score = element.https_score != undefined ? element.https_score : ( element.obs_score != undefined ? element.obs_score : 0);
  	var https_rank = element.https_rank != undefined ? element.https_rank : ( element.obs_rank != undefined ? element.obs_rank : 'F');
@@ -118,7 +114,7 @@
 
  	return [
 
- 	(thumbnail != null ? '<img class="float-left mr-2 rounded" src="' + thumbnail + '" width="35" height="35" alt="' + instance_name + '" /></div>' : '') + instance_name + ( instance_desc != null ? '<div class="small text-muted">' + instance_desc + '</div>' : ''),
+ 	(thumbnail != null ? '<img class="float-left mr-2 rounded" src="' + thumbnail + '" width="35" height="35" alt="' + instance_name + '" /></div>' : '') + instance_url + ( instance_desc != null ? '<div class="small text-muted">' + instance_desc + '</div>' : ''),
  	status_badge,
  	element.users,
  	element.statuses,
