@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/fh-3.1.4/r-2.2.2/sc-1.5.0/datatables.min.css"/>
 
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/fh-3.1.4/r-2.2.2/sc-1.5.0/datatables.min.js"></script>
@@ -41,29 +41,19 @@
 						</div>
 					</div>
 
-
-					<div class="form-group">
-						<label for="include_dead">Show dead instances?</label>
-						<div>
-							<input type="radio" value="false" name="include_dead" id="include_dead" checked="checked" />No
-							<input type="radio" value="true" name="include_dead" id="include_dead" />Yes
-						</div>
+					<div class="custom-control custom-switch">
+						<input type="checkbox" class="custom-control-input" id="include_closed" name="include_closed" value="true">
+						<label class="custom-control-label" for="include_closed">Show closed instances</label>
 					</div>
 
-					<div class="form-group">
-						<label for="include_down">Show down instances?</label>
-						<div>
-							<input type="radio" value="false" name="include_down" id="include_down" checked="checked" />No
-							<input type="radio" value="true" name="include_down" id="include_down" />Yes
-						</div>
+					<div class="custom-control custom-switch">
+						<input type="checkbox" class="custom-control-input" id="include_dead" name="include_dead" value="true">
+						<label class="custom-control-label" for="include_dead">Show dead instances</label>
 					</div>
 
-					<div class="form-group">
-						<label for="include_closed">Show closed instances?</label>
-						<div>
-							<input type="radio" value="false" name="include_closed" id="include_closed" checked="checked" />No
-							<input type="radio" value="true" name="include_closed" id="include_closed" />Yes
-						</div>
+					<div class="custom-control custom-switch">
+						<input type="checkbox" class="custom-control-input" id="include_down" name="include_down" value="true">
+						<label class="custom-control-label" for="include_down">Show down instances</label>
 					</div>
 
 
